@@ -10,89 +10,8 @@ cc.Class({
         MazeLayer:cc.Node,
         scale:0.3,
         Node:cc.Node,
-        Camera:cc.Camera,
     },
 
-    Capture() {
-        let node = new cc.Node();
-        node.parent = cc.director.getScene();
-
-        this.Camera.cullingMask = "Ground"
-
-        let texture = new cc.RenderTexture();
-        let gl = cc.game._renderContext;
-
-        texture.initWithSize(cc.visibleRect.width,cc.visibleRect.height,gl.STENCIL_INDEX8);
-        this.Camera.targetTexture = texture;
-
-        this.Camera.render();
-        let data = texture.readPixels();
-
-        // Then you can manipulate the data.
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
-        canvas.width = texture.width;
-        canvas.height = texture.height;
-
-        let rowBytes = canvas.width * 4;
-        for (let row = 0; row < canvas.height; row++) {
-            let srow = canvas.height - 1 - row;
-            let imageData = ctx.createImageData(canvas.width, 1);
-            let start = srow*canvas.width*4;
-            for (let i = 0; i < rowBytes; i++) {
-                imageData.data[i] = data[start+i];
-            }
-        
-            ctx.putImageData(imageData, 0, row);
-        }
-
-        let dataURL = canvas.toDataURL("image/jpeg");
-        let img = document.createElement("img");
-        img.src = dataURL;
-
-        console.log(img);
-        
-
-        img.style.position = 'absolute';
-        img.style.display = 'block';
-        img.style.left = '0px'
-        img.style.top = '0px';
-        img.zIndex = 100;
-
-        img.style.transform = cc.game.container.style.transform;
-        img.style['transform-origin'] = cc.game.container.style['transform-origin'];
-        img.style.margin = cc.game.container.style.margin;
-        img.style.padding = cc.game.container.style.padding;
-
-        img.onclick = function (event) {
-            event.stopPropagation();
-            img.remove();
-        }
-
-
-        document.body.appendChild(img);
-
-        let texturez = new cc.Texture2D();
-        texturez.initWithElement(img);
-
-        let spriteFrame = new cc.SpriteFrame();
-        spriteFrame.setTexture(texturez);
-
-        let nodez = new cc.Node();
-        let sprite = nodez.addComponent(cc.Sprite);
-        sprite.spriteFrame = spriteFrame;
-        texturez.saveToFile("snapshot.png",img);
-
-        node.zIndex = cc.macro.MAX_ZINDEX;
-        node.parent = cc.director.getScene();
-        node.x = cc.winSize.width/2;
-        node.y = cc.winSize.height/2;
-        node.on(cc.Node.EventType.TOUCH_START, () => {
-            node.parent = null;
-        });
-
-        render
-    },
     start () {
         // 0=NotChecked 
         // 1=Checked
@@ -122,13 +41,6 @@ cc.Class({
 
         //Start Create Maze
         this.Kill(Math.floor(Math.random()*this.width),Math.floor(Math.random()*this.height));
-
-
-
-
-
-
-
     },
 
     //Check from Left-top to Right-bottom for set next kill Location 

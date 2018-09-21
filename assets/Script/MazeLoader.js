@@ -5,7 +5,7 @@ cc.Class({
     properties: {
         width:8,
         height:8,
-        Mapjson:cc.JsonAsset,
+        Mapjson:cc.JsonAsset,      
         MazeLayer:cc.Node,
         MazeBlock:cc.Prefab,
         scale:1,
@@ -24,7 +24,7 @@ cc.Class({
             {
                 this.directionAll[i][j] = a[i+","+j];
 
-                //e,n,s,w
+                //sort order =  east,north,south,west
                 let block = cc.instantiate(this.MazeBlock);
                 console.log(i,j,this.directionAll[i][j].sort().toString());
                     switch(this.directionAll[i][j].sort().toString())
